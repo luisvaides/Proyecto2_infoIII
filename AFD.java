@@ -6,6 +6,11 @@
 */
 public class AFD{
 	
+	private int [] states;
+	private HashMap<String, Integer> transitions;
+    private int initialState;
+    private int[] finalStates;
+
 	/*
 		Implemente el constructor de la clase AFD
 		que recibe como argumento un string que 
@@ -13,7 +18,7 @@ public class AFD{
 		la informacion del afd (i.e. "Documentos/archivo.afd").
 		Puede utilizar la estructura de datos que desee
 	*/
-	public AFD(String path){
+	public AFD(String path){ // path = camino
 
 	}
 
@@ -23,7 +28,7 @@ public class AFD{
 		caracter que representa el simbolo a consumir, y devuelve 
 		un entero que representa el siguiente estado
 	*/
-	public int getTransition(int currentState, char symbol){
+	public int getTransition(int currentState, char symbol){ // currentState = estado actual 
 		return 0;
 	}
 
@@ -45,13 +50,19 @@ public class AFD{
 	*/
 	public boolean[] evaluateMany(String[] strings){
 		return new boolean[0];
+		
 	}
 
 	/*
 		Implemente el metodo isFinal, que devuelve true si el estado enviado
 		es un estado final, y false si no lo es
 	*/
-	public boolean isFinal(int currentState){
-		return true;
+	public boolean isFinal(int currentState){ // currentState = estado actualz
+		for (int finalstate : finalstate) {
+			if (currentState == finalstate) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
