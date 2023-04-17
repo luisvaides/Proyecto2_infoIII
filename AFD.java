@@ -7,59 +7,58 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AFD {
-    private int numEstados;
-    private Set<Integer> estadosFinales;
-    private HashMap<Character, Integer> alfabeto;
+    private int estados;
+    private Set<Integer> estados_finales;
+    private HashMap<Character, Integer> evaluaralf;
     private int[][] transicion;
 
     public AFD(String path) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            numEstados = Integer.parseInt(br.readLine());
-            estadosFinales = new HashSet<>();
-            for (String estado : br.readLine().split(",")) {
-                estadosFinales.add(Integer.parseInt(estado));
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            estados = Integer.parseInt(br.readLine());
+            estados_finales = new HashSet<>();
+            Arrays.stream(br.readLine().split(",")).mapToInt(Integer::parseInt).forEach(estados_finales::add);
+            
+            String[] symbole = br.readLine().split(",");
+            evaluaralf = new HashMap<>();
+            for (int i = 0; i < symbole.length; i++) {
+                evaluaralf.put(symbole [i].charAt(0), i);
             }
-            String[] simbolos = br.readLine().split(",");
-            alfabeto = new HashMap<>();
-            for (int i = 0; i < simbolos.length; i++) {
-                alfabeto.put(simbolos[i].charAt(0), i);
+            
+            transicion = new int[symbole.length][estados];
+            for (int i = 0; i < symbole.length; i++) {
+                transicion[i] = Arrays.stream(br.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
             }
-            transicion = new int[simbolos.length][numEstados];
-            for (int i = 0; i < simbolos.length; i++) {
-                int[] fila = Arrays.stream(br.readLine().split(",")).mapToInt(Integer::parseInt).toArray();
-                for (int j = 0; j < fila.length; j++) {
-                    transicion[i][j] = fila[j];
-                }
-            }
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public int getTransition(int currentState, char symbol) {
-        return transicion[alfabeto.get(symbol)][currentState];
-    }
+        int symbol2 = evaluaralf.get(symbol);
+        return transicion[symbol2][currentState];    }
 
     public boolean evaluate(String string) {
         int currentState = 1;
         for (char symbol : string.toCharArray()) {
-            currentState = getTransition(currentState, symbol);
+            currentState = procesarsymbol(currentState, symbol);
         }
         return isFinal(currentState);
     }
+    
+    private int procesarsymbol(int currentState, char symbol) {
+        return getTransition(currentState, symbol);
+    }
 
     public boolean[] evaluateMany(String[] strings) {
-        boolean[] resultados = new boolean[strings.length];
+        boolean[] resultado = new boolean[strings.length];
         for (int i = 0; i < strings.length; i++) {
-            resultados[i] = evaluate(strings[i]);
+            resultado[i] = evaluate(strings[i]);
         }
-        return resultados;
+        return resultado;
     }
 
     public boolean isFinal(int currentState) {
-        return estadosFinales.contains(currentState);
+        return estados_finales.contains(currentState);
     }
 
     public void printMinimum() {
@@ -72,7 +71,7 @@ public class AFD {
             return;
         }
     
-        for (char symbol : alfabeto.keySet()) {
+        for (char symbol : evaluaralf.keySet()) {
             int nextState = getTransition(currentState, symbol);
             if (nextState != 0) {
                 currentString.append(symbol);
