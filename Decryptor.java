@@ -21,8 +21,12 @@ public class Decryptor{
             }
         }else if(args[0].equals("-a")){
             gradingMode();
-        }else{
-            printUsage();
+        }else if (args[0].equals("-p")) {
+            if (args.length == 2) {
+                printMinimum(args[1]);
+            } else {
+                printUsage();
+            }
         }
     }
 
@@ -39,6 +43,12 @@ public class Decryptor{
                 System.out.println("The evaluated string contains one or more invalid characters.");
             }
         }
+    }
+
+    static void printMinimum(String afd_path) {
+        AFD afd = new AFD(afd_path);
+        System.out.println("---------- Minimum Accepted ----------");
+        afd.printMinimum();
     }
 
     static void gradingMode() throws Exception{
@@ -81,7 +91,7 @@ public class Decryptor{
     }
 
     static void printUsage(){
-        System.out.println("Decriptor. Usage is 'java Descriptor (-i|-a)' AFD_PATH");
+        System.out.println("Decriptor. Usage is 'java Descriptor (-i|-a|-p)' AFD_PATH");
     }
 
     static double score(boolean[] obtained, String[] expected, double answerValue){

@@ -1,0 +1,37 @@
+PUNTOSEXTRA.txt
+Clase AFD :
+public void printMinimum() {
+        finalState(1, new StringBuilder());
+    }
+    
+    private void finalState(int currentState, StringBuilder currentString) {
+        if (isFinal(currentState)) {
+            System.out.println(currentString.toString());
+            return;
+        }
+    
+        for (char symbol : alfabeto.keySet()) {
+            int nextState = getTransition(currentState, symbol);
+            if (nextState != 0) {
+                currentString.append(symbol);
+                finalState(nextState, currentString);
+                currentString.setLength(currentString.length() - 1);
+            }
+        }
+    }
+
+Clase Decryptor :
+
+else if (args[0].equals("-p")) {
+    if (args.length == 2) {
+        printMinimum(args[1]);
+    } else {
+        printUsage();
+    }
+}
+
+static void printMinimum(String afd_path) {
+    AFD afd = new AFD(afd_path);
+    System.out.println("---------- Minimum Accepted ----------");
+    afd.printMinimum();
+}
